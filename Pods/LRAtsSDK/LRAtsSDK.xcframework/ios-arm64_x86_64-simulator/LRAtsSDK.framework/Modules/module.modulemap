@@ -1,0 +1,11 @@
+framework module LRAtsSDK {
+  umbrella header "LRAtsSDK.h"
+  export *
+
+  module * { export * }
+}
+
+module LRAtsSDK.Swift {
+  header "LRAtsSDK-Swift.h"
+  requires objc
+}

@@ -1,0 +1,4 @@
+framework module LRAtsSDKMediationAdapter {
+    umbrella header "LRAtsMediationAdapter.h"
+    export *
+}

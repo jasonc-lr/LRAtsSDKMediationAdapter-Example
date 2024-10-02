@@ -16,6 +16,8 @@
 
 import GoogleMobileAds
 import UIKit
+import AppTrackingTransparency
+
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -28,5 +30,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   ) -> Bool {
     return true
   }
+    
+    
+    // Required for LiveRamp SDK / Adapter Usage
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+            // Make sure you have ATT consent and user consent to initialize and get envelope successfully
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                switch status {
+                case .authorized:
+                    // Tracking authorization dialog was shown and we are authorized
+                    print("Authorized")
+                case .denied:
+                    // Tracking authorization dialog was shown and permission is denied
+                    print("Denied")
+                case .notDetermined:
+                    // Tracking authorization dialog has not been shown
+                    print("Not Determined")
+                default:
+                    print("Unknown")
+                }
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+        }
 
 }

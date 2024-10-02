@@ -16,6 +16,7 @@
 
 import GoogleMobileAds
 import UIKit
+import LRAtsSDKMediationAdapter
 
 class GameViewController: UIViewController, GADFullScreenContentDelegate {
 
@@ -66,6 +67,11 @@ class GameViewController: UIViewController, GADFullScreenContentDelegate {
   @IBOutlet weak var coinCountLabel: UILabel!
 
   override func viewDidLoad() {
+      
+      
+      self.setupLiveRamp()
+
+      
     super.viewDidLoad()
 
     // Pause game when application enters background.
@@ -118,6 +124,22 @@ class GameViewController: UIViewController, GADFullScreenContentDelegate {
       }
     }
   }
+    
+  
+   // MARK: - LiveRamp Setup Logic
+   // Recommend that you call this as early as possible to ensure first ad request is captured.
+   private func setupLiveRamp() {
+       
+//       LRAts.shared.initialize(with: LRAtsConfiguration(configID: "e47b5b24-f041-4b9f-9467-4744df409e31"))
+
+       LRAtsMediationAdapter.setIdentifier(LREmailIdentifier("atstest@liveramp.com"))
+       LRAtsMediationAdapter.setHasConsentForNoLegislation(true)
+       LRAtsMediationAdapter.configure(LRAtsConfiguration(configID: "e47b5b24-f041-4b9f-9467-4744df409e31"))
+       
+    }
+    
+    
+    
 
   // MARK: - Game Logic
 

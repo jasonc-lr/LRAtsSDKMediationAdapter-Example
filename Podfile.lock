@@ -2,20 +2,29 @@ PODS:
   - Google-Mobile-Ads-SDK (11.10.0):
     - GoogleUserMessagingPlatform (>= 1.1)
   - GoogleUserMessagingPlatform (2.6.0)
+  - LRAtsSDK (2.6.1)
+  - LRAtsSDKMediationAdapter (2.6.1):
+    - Google-Mobile-Ads-SDK
+    - LRAtsSDK
 
 DEPENDENCIES:
   - Google-Mobile-Ads-SDK
   - GoogleUserMessagingPlatform
+  - LRAtsSDKMediationAdapter
 
 SPEC REPOS:
   trunk:
     - Google-Mobile-Ads-SDK
     - GoogleUserMessagingPlatform
+    - LRAtsSDK
+    - LRAtsSDKMediationAdapter
 
 SPEC CHECKSUMS:
   Google-Mobile-Ads-SDK: 13e6e98edfd78ad8d8a791edb927658cc260a56f
   GoogleUserMessagingPlatform: 0c3a08353e53ce8c2feab7addd0b652cde522450
+  LRAtsSDK: 63417457ffc539ecc3c00b1647ce504bc2ee28f7
+  LRAtsSDKMediationAdapter: 0e8bf3b8cb0703df11a806053695b6223b63d140
 
-PODFILE CHECKSUM: 8e0c0c662d559161a504116496b549b08173b2bd
+PODFILE CHECKSUM: 253ae6e9540a9256d162785f1e0680139f14e521
 
 COCOAPODS: 1.15.2

@@ -206,6 +206,8 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Sample App - LiveRamp requires you to collect ATT consent!</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

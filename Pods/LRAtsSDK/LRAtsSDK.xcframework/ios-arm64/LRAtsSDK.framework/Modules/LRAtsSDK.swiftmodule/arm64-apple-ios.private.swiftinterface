@@ -1,0 +1,365 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name LRAtsSDK
+import AppTrackingTransparency
+import CommonCrypto
+import CoreData
+import Foundation
+@_exported import LRAtsSDK
+import Swift
+import SystemConfiguration
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@objc public enum LRError : Swift.Int, Swift.Error {
+  case notImplemented
+  case missingConfigID
+  case fetchingConfigurationFailed
+  case invalidConfiguration
+  case fetchingEnvelopeFailed
+  case refreshingEnvelopeFailed
+  case noConsent
+  case atsDisabledInCountry
+  case sdkIsDisabled
+  case sdkIsNotReady
+  case noInternet
+  case sdkIsAlreadyLoading
+  case sdkIsAlreadyInitialized
+  case sdkInitializationCancelled
+  case databaseFailure
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public static var _nsErrorDomain: Swift.String {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension LRAtsSDK.LRError : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension LRAtsSDK.LRError : Foundation.LocalizedError {
+  public var errorDescription: Swift.String? {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class LRAts : ObjectiveC.NSObject {
+  public typealias LRInitializeCompletion = (_ success: Swift.Bool, _ error: (any Swift.Error)?) -> Swift.Void
+  public typealias LRGetEnvelopeCompletion = (_ envelope: LRAtsSDK.LREnvelope?, _ error: (any Swift.Error)?) -> Swift.Void
+  public typealias LRSyncFiltersCompletion = (LRAtsSDK.LRBloomFilterSyncStatus) -> Swift.Void
+  public typealias LRGetDealIDsCompletion = (LRAtsSDK.LRDealIDsResult) -> Swift.Void
+  @objc public static var shared: LRAtsSDK.LRAts {
+    @objc get
+  }
+  @objc weak public var delegate: (any LRAtsSDK.LRAtsDelegate)?
+  @objc public var hasConsentForNoLegislation: Swift.Bool
+  @objc public var isDisabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public static var sdkVersion: Swift.String {
+    get
+  }
+  @objc public var status: LRAtsSDK.LRStatus {
+    get
+  }
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 15, *)
+  public func initialize(with configuration: LRAtsSDK.LRAtsConfiguration) async throws
+  #endif
+  @objc public func initialize(with sdkConfiguration: LRAtsSDK.LRAtsConfiguration, completion: @escaping LRAtsSDK.LRAts.LRInitializeCompletion = { _, _ in })
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 15, *)
+  public func getDealIDs(for userIdentifier: LRAtsSDK.LRDealIdentifier) async -> LRAtsSDK.LRDealIDsResult
+  #endif
+  @objc public func getDealIDs(for userIdentifier: LRAtsSDK.LRDealIdentifier, completion: @escaping LRAtsSDK.LRAts.LRGetDealIDsCompletion)
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 15, *)
+  @discardableResult
+  public func syncFilters() async -> LRAtsSDK.LRBloomFilterSyncStatus
+  #endif
+  @objc public func syncFilters(completion: @escaping LRAtsSDK.LRAts.LRSyncFiltersCompletion = { _ in })
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 15, *)
+  @discardableResult
+  @objc public func getEnvelope(_ lrIdentifierData: any LRAtsSDK.LRIdentifierData) async throws -> LRAtsSDK.LREnvelope
+  #endif
+  @objc public func getEnvelope(_ lrIdentifierData: any LRAtsSDK.LRIdentifierData, completion: @escaping LRAtsSDK.LRAts.LRGetEnvelopeCompletion)
+  @objc public func resetSDK()
+  @objc deinit
+}
+@objc public enum LREvent : Swift.Int {
+  case loading
+  case ready
+  case reset
+  case shouldSynchronize
+  case disabled
+  case syncFull
+  case syncPartial
+  case syncError
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension LRAtsSDK.LREvent : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+@objc @objcMembers public class LREnvelopeIdentifier : ObjectiveC.NSObject, Swift.Codable, LRAtsSDK.LRIdentifierData {
+  @objc public var envelope: Swift.String
+  @objc public init(_ envelope: Swift.String)
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @objcMembers public class LREmailIdentifier : ObjectiveC.NSObject, Swift.Codable, LRAtsSDK.LRIdentifierData {
+  @objc public var sha1: Swift.String
+  @objc public var sha256: Swift.String
+  @objc public var md5: Swift.String
+  @objc public init(_ email: Swift.String)
+  @objc public init(sha1: Swift.String = "", sha256: Swift.String = "", md5: Swift.String = "")
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc public protocol LRAtsDelegate {
+  @objc func eventFired(event: LRAtsSDK.LREvent)
+  @objc func didReceiveError(_ error: any Swift.Error)
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class LRAtsConfiguration : ObjectiveC.NSObject {
+  @objc public init(configID: Swift.String)
+  @objc public init(configID: Swift.String, apiKey: Swift.String)
+  @objc public init(configID: Swift.String, apiKey: Swift.String = "", isTestMode: Swift.Bool = false, logToFileEnabled: Swift.Bool = false)
+  @available(*, deprecated, renamed: "init(configID:apiKey:isTestMode:logToFileEnabled:)", message: "Use init(configID:apiKey:isTestMode:logToFileEnabled:) instead.")
+  @objc public init(appId: Swift.String, apiKey: Swift.String = "", isTestMode: Swift.Bool = false, logToFileEnabled: Swift.Bool = false)
+  @objc deinit
+}
+extension LRAtsSDK.LRAtsConfiguration {
+  @objc override dynamic public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc override dynamic public var hash: Swift.Int {
+    @objc get
+  }
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class LREnvelope : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var envelope: Swift.String?
+  @objc public var envelope24: Swift.String?
+  @objc public var envelope25: Swift.String?
+  @objc public var envelope26: Swift.String?
+  @objc public var envelope27: Swift.String?
+  @objc public var pairSegments: [Swift.String]? {
+    @objc get
+  }
+  @objc public var atsDirectSegments: [Swift.String]? {
+    @objc get
+  }
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc public enum LRStatus : Swift.Int {
+  case notInitialized
+  case loading
+  case ready
+  case error
+  case disabled
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension LRAtsSDK.LRStatus : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+@objc @objcMembers public class LRCustomIdentifier : ObjectiveC.NSObject, Swift.Codable, LRAtsSDK.LRIdentifierData {
+  @objc public var customID: Swift.String
+  @objc public init(_ customID: Swift.String)
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@propertyWrapper public struct URLValue : Swift.Codable, Swift.Equatable {
+  public var wrappedValue: Foundation.URL?
+  public init(wrappedValue: Foundation.URL?)
+  public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+  public static func == (a: LRAtsSDK.URLValue, b: LRAtsSDK.URLValue) -> Swift.Bool
+}
+@objc @objcMembers public class LRDealIdentifier : ObjectiveC.NSObject, Swift.Codable, LRAtsSDK.LRIdentifierData {
+  @objc public var sha256: Swift.String
+  @objc public init(email: Swift.String)
+  @objc public init(sha256: Swift.String)
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class LRDealIDsResult : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var status: LRAtsSDK.LRDealIDsResultStatus
+  @objc public var dealIDs: [Swift.String]?
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+#warning("This property wrapper may cause issues where data is not correctly stored and retrieved from UserDefaults. This issue was noticable in TCF.hasConsent method and testGetDealIDsWithIsPlacementApprovedFalse")
+extension Swift.Optional {
+  public var isNil: Swift.Bool {
+    get
+  }
+}
+public enum ReachabilityError : Swift.Error {
+  case failedToCreateWithAddress(Darwin.sockaddr, Swift.Int32)
+  case failedToCreateWithHostname(Swift.String, Swift.Int32)
+  case unableToSetCallback(Swift.Int32)
+  case unableToSetDispatchQueue(Swift.Int32)
+  case unableToGetFlags(Swift.Int32)
+}
+@available(*, unavailable, renamed: "Notification.Name.reachabilityChanged")
+public let ReachabilityChangedNotification: Foundation.NSNotification.Name
+extension Foundation.NSNotification.Name {
+  public static let reachabilityChanged: Foundation.Notification.Name
+}
+public class Reachability {
+  public typealias NetworkReachable = (LRAtsSDK.Reachability) -> ()
+  public typealias NetworkUnreachable = (LRAtsSDK.Reachability) -> ()
+  @available(*, unavailable, renamed: "Connection")
+  public enum NetworkStatus : Swift.CustomStringConvertible {
+    case notReachable, reachableViaWiFi, reachableViaWWAN
+    public var description: Swift.String {
+      get
+    }
+    public static func == (a: LRAtsSDK.Reachability.NetworkStatus, b: LRAtsSDK.Reachability.NetworkStatus) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public enum Connection : Swift.CustomStringConvertible {
+    case unavailable, wifi, cellular
+    public var description: Swift.String {
+      get
+    }
+    @available(*, deprecated, renamed: "unavailable")
+    public static let none: LRAtsSDK.Reachability.Connection
+    public static func == (a: LRAtsSDK.Reachability.Connection, b: LRAtsSDK.Reachability.Connection) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public var whenReachable: LRAtsSDK.Reachability.NetworkReachable?
+  public var whenUnreachable: LRAtsSDK.Reachability.NetworkUnreachable?
+  @available(*, deprecated, renamed: "allowsCellularConnection")
+  final public let reachableOnWWAN: Swift.Bool
+  public var allowsCellularConnection: Swift.Bool
+  public var notificationCenter: Foundation.NotificationCenter
+  @available(*, deprecated, renamed: "connection.description")
+  public var currentReachabilityString: Swift.String {
+    get
+  }
+  @available(*, unavailable, renamed: "connection")
+  public var currentReachabilityStatus: LRAtsSDK.Reachability.Connection {
+    get
+  }
+  public var connection: LRAtsSDK.Reachability.Connection {
+    get
+  }
+  required public init(reachabilityRef: SystemConfiguration.SCNetworkReachability, queueQoS: Dispatch.DispatchQoS = .default, targetQueue: Dispatch.DispatchQueue? = nil, notificationQueue: Dispatch.DispatchQueue? = .main)
+  convenience public init(hostname: Swift.String, queueQoS: Dispatch.DispatchQoS = .default, targetQueue: Dispatch.DispatchQueue? = nil, notificationQueue: Dispatch.DispatchQueue? = .main) throws
+  convenience public init(queueQoS: Dispatch.DispatchQoS = .default, targetQueue: Dispatch.DispatchQueue? = nil, notificationQueue: Dispatch.DispatchQueue? = .main) throws
+  @objc deinit
+}
+extension LRAtsSDK.Reachability {
+  public func startNotifier() throws
+  public func stopNotifier()
+  @available(*, deprecated, message: "Please use `connection != .none`")
+  public var isReachable: Swift.Bool {
+    get
+  }
+  @available(*, deprecated, message: "Please use `connection == .cellular`")
+  public var isReachableViaWWAN: Swift.Bool {
+    get
+  }
+  @available(*, deprecated, message: "Please use `connection == .wifi`")
+  public var isReachableViaWiFi: Swift.Bool {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+}
+@objc public protocol LRIdentifierData {
+  @objc optional var sha1: Swift.String { get }
+  @objc optional var sha256: Swift.String { get }
+  @objc optional var md5: Swift.String { get }
+  @objc optional var customID: Swift.String { get }
+  @objc optional var envelope: Swift.String { get }
+}
+@objc public enum LRDealIDsResultStatus : Swift.Int, Swift.Codable {
+  case full
+  case partial
+  case offline
+  case error
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension LRAtsSDK.LRDealIDsResultStatus : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+@objc public enum LRBloomFilterSyncStatus : Swift.Int {
+  case full
+  case partial
+  case error
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension LRAtsSDK.LRBloomFilterSyncStatus : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+@objc @objcMembers public class LRPhoneNumberIdentifier : ObjectiveC.NSObject, Swift.Codable, LRAtsSDK.LRIdentifierData {
+  @objc public var sha1: Swift.String
+  @objc public init(_ phoneNumber: Swift.String)
+  @objc public init(sha1: Swift.String)
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+extension LRAtsSDK.LRError : Swift.Equatable {}
+extension LRAtsSDK.LRError : Swift.Hashable {}
+extension LRAtsSDK.LRError : Swift.RawRepresentable {}
+extension LRAtsSDK.LREvent : Swift.Equatable {}
+extension LRAtsSDK.LREvent : Swift.Hashable {}
+extension LRAtsSDK.LREvent : Swift.RawRepresentable {}
+extension LRAtsSDK.LRStatus : Swift.Equatable {}
+extension LRAtsSDK.LRStatus : Swift.Hashable {}
+extension LRAtsSDK.LRStatus : Swift.RawRepresentable {}
+@available(*, unavailable, renamed: "Connection")
+extension LRAtsSDK.Reachability.NetworkStatus : Swift.Equatable {}
+@available(*, unavailable, renamed: "Connection")
+extension LRAtsSDK.Reachability.NetworkStatus : Swift.Hashable {}
+extension LRAtsSDK.Reachability.Connection : Swift.Equatable {}
+extension LRAtsSDK.Reachability.Connection : Swift.Hashable {}
+extension LRAtsSDK.LRDealIDsResultStatus : Swift.Equatable {}
+extension LRAtsSDK.LRDealIDsResultStatus : Swift.Hashable {}
+extension LRAtsSDK.LRDealIDsResultStatus : Swift.RawRepresentable {}
+extension LRAtsSDK.LRBloomFilterSyncStatus : Swift.Equatable {}
+extension LRAtsSDK.LRBloomFilterSyncStatus : Swift.Hashable {}
+extension LRAtsSDK.LRBloomFilterSyncStatus : Swift.RawRepresentable {}
