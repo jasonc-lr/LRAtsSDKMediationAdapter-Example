@@ -1,0 +1,6 @@
+module Pods_AdManagerRewardedInterstitialExample {
+  umbrella header "Pods-AdManagerRewardedInterstitialExample-umbrella.h"
+
+  export *
+  module * { export * }
+}
